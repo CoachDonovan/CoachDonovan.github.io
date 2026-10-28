@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Coaching Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E6EAEE; --sheet:#F7F9FA; --ink:#14212B; --muted:#5A6873; --line:#C9D1D8;
+  --accent:#1F4FE0; --accent-ink:#FFFFFF; --soft:#DCE4FB; --warn:#B3261E;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E151B; --sheet:#16212A; --ink:#E7EDF2; --muted:#93A3B0; --line:#2C3A46;
+    --accent:#6F93FF; --accent-ink:#0B1220; --soft:#1E2C4D; --warn:#FF8A80; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E151B; --sheet:#16212A; --ink:#E7EDF2; --muted:#93A3B0; --line:#2C3A46;
+  --accent:#6F93FF; --accent-ink:#0B1220; --soft:#1E2C4D; --warn:#FF8A80; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Archivo,"Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 96px}
+header.hero{padding:40px 0 24px}
+.hero h1{font:800 clamp(44px,11vw,76px)/.92 "Barlow Condensed","Arial Narrow",sans-serif;margin:0;letter-spacing:-.01em}
+.hero p{max-width:56ch;color:var(--muted);margin:16px 0 0}
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line)}
+.progress .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress .fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.progress .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px}
+section.step{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:22px 20px 8px;margin-top:20px}
+.step h2{display:flex;gap:12px;align-items:baseline;font:700 28px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;margin:0 0 4px}
+.step h2 .n{color:var(--accent);font-size:22px}
+.step .lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.f{margin-bottom:18px;grid-column:span 2}
+.f.half{grid-column:span 1}
+@media (max-width:520px){.f.half{grid-column:span 2}}
+.f > label,.f > .q{display:block;font-weight:600;font-size:15px;margin-bottom:6px}
+.req{color:var(--accent)}
+.hint{font-size:13px;color:var(--muted);margin:-2px 0 8px}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=time],select,textarea{
+  width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:11px 12px;min-height:46px}
+textarea{min-height:96px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,.chip input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.pair{display:flex;gap:10px}
+.pair > div{flex:1;position:relative}
+.unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0}
+.chip span{display:inline-block;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:15px;cursor:pointer;background:var(--bg);user-select:none}
+.chip input:checked+span{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.other{margin-top:8px}
+.range{display:flex;align-items:center;gap:12px}
+.range input{flex:1;accent-color:var(--accent)}
+.range output{font:700 22px "Barlow Condensed",sans-serif;min-width:2ch;text-align:right}
+.err .q,.err>label{color:var(--warn)}
+.err input,.err select,.err textarea{border-color:var(--warn)}
+.errmsg{color:var(--warn);font-size:13px;margin-top:4px;display:none}
+.err .errmsg{display:block}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.consent input{width:22px;height:22px;margin-top:2px;accent-color:var(--accent);flex:none}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+button{font:600 16px Archivo,sans-serif;border-radius:4px;padding:13px 20px;cursor:pointer;border:1px solid var(--accent)}
+.primary{background:var(--accent);color:var(--accent-ink)}
+.ghost{background:transparent;color:var(--accent)}
+.saved{font-size:13px;color:var(--muted);align-self:center}
+#review{display:none}
+#review pre{white-space:pre-wrap;word-wrap:break-word;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:16px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;max-height:60vh;overflow:auto}
+.status{font-size:14px;margin-top:10px;color:var(--muted);min-height:1.4em}
+@media (prefers-reduced-motion:reduce){.progress .fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>Let's build your plan.</h1>
+    <p>Everything here shapes your calories, macros and meal schedule. Be honest and specific: the more we know about what you actually eat and when you actually live, the easier the plan is to stick to. Takes about 10 minutes. Your answers save on this device as you go.</p>
+  </header>
+  <div class="progress" aria-hidden="true">
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="meta"><span id="progTxt">0 of 0 required answered</span><span id="savedTxt"></span></div>
+  </div>
+  <form id="form" novalidate></form>
+  <section class="step" id="review" aria-live="polite">
+    <h2>Send your answers</h2>
+    <p class="lede">Copy everything below and send it to your coach by text or email. You can also save a copy to your device.</p>
+    <pre id="summary"></pre>
+    <div class="actions">
+      <button type="button" class="primary" id="copyBtn">Copy answers</button>
+      <button type="button" class="ghost" id="dlBtn" hidden>Save a copy</button>
+      <button type="button" class="ghost" id="editBtn">Edit answers</button>
+    </div>
+    <div class="status" id="status"></div>
+  </section>
+</div>
+
+<script>
+const PROTEINS=["Chicken breast","Chicken thighs","Lean ground beef","Steak","Ground turkey","Turkey slices","Salmon","White fish","Shrimp","Tuna","Eggs","Egg whites","Greek yogurt","Cottage cheese","Whey protein","Pork tenderloin","Bison","Tofu / tempeh","Jerky"];
+const CARBS=["White rice","Jasmine rice","Brown rice","Potatoes","Sweet potatoes","Oats","Cream of rice","Pasta","Bread / bagels","Tortillas / wraps","Rice cakes","Cereal","Quinoa","Beans / lentils","Fruit","Honey"];
+const FATS=["Avocado","Olive oil","Butter","Peanut butter","Almond butter","Nuts","Cheese","Whole eggs","Dark chocolate","Seeds (chia, flax)","Coconut oil","Salmon / fatty fish"];
+const VEG=["Broccoli","Green beans","Asparagus","Spinach","Mixed salad","Zucchini","Bell peppers","Brussels sprouts","Cauliflower","Carrots","Cucumber","Mushrooms","Onions"];
+const FRUIT=["Berries","Banana","Apple","Grapes","Pineapple","Mango","Oranges","Watermelon","Kiwi"];
+const CUISINE=["Mexican","Asian","Italian","Mediterranean","BBQ / grill","American comfort","Indian","Middle Eastern","Breakfast foods"];
+const COMFORT=["Burgers","Pizza","Tacos","Burritos","Quesadillas","Nachos","Deli sandwiches","Subs / hoagies","Philly cheesesteak","Hot dogs","Wings","Chicken tenders","Fried chicken","Grilled cheese","Mac and cheese","Spaghetti and meatballs","Lasagna","Chicken alfredo","Chili","BBQ ribs / pulled pork","Fried rice","Teriyaki bowls","Orange chicken","Stir fry","Ramen / pho","Sushi / poke","Gyros","Curry","Pancakes / waffles","French toast","Breakfast burritos","Breakfast sandwiches","Biscuits and gravy","Loaded fries"];
+const SWEETS=["Ice cream","Frozen yogurt","Milkshakes","Cookies","Brownies","Cake / cupcakes","Donuts","Pop-Tarts","Cereal","Candy","Chocolate","Cheesecake","Pie","Chips","Popcorn","Pretzels","Crackers","Protein bars","Rice Krispie treats","Soda"];
+const SUPPS=["Whey / protein powder","Creatine","Multivitamin","Fish oil","Vitamin D","Magnesium","Electrolytes","Pre-workout","Caffeine pills","Fat burner","Greens powder","Fiber","Collagen","Probiotic","Ashwagandha","Melatonin","EAAs / BCAAs","None"];
+
+const SECTIONS=[
+ {t:"About you",l:"The numbers we build your calories from.",f:[
+  {id:"name",lb:"Full name",ty:"text",req:1,half:1},
+  {id:"age",lb:"Age",ty:"number",req:1,half:1,unit:"yrs"},
+  {id:"email",lb:"Email",ty:"email",req:1,half:1},
+  {id:"phone",lb:"Phone",ty:"tel",half:1},
+  {id:"sex",lb:"Sex",ty:"radio",req:1,o:["Male","Female"]},
+  {id:"height",lb:"Height",ty:"height",req:1},
+  {id:"weight",lb:"Current weight",ty:"number",req:1,half:1,unit:"lb",hint:"Morning, after the bathroom, before food."},
+  {id:"goalWeight",lb:"Goal weight",ty:"number",half:1,unit:"lb",hint:"Leave blank if you're not sure."},
+  {id:"bf",lb:"Body fat % (if known)",ty:"number",half:1,unit:"%",hint:"DEXA, InBody, calipers. Note the method below."},
+  {id:"waist",lb:"Waist at belly button",ty:"number",half:1,unit:"in",hint:"Relaxed, tape level."},
+  {id:"bfMethod",lb:"How was body fat measured?",ty:"text"},
+  {id:"job",lb:"What does your work day look like?",ty:"radio",req:1,o:["Mostly sitting","Mix of sitting and standing","On my feet most of the day","Physically demanding","Shift work / 24-hr shifts"]},
+  {id:"jobDetail",lb:"Job title and schedule",ty:"text",hint:"e.g. nurse, 3×12s; firefighter, 48/96."},
+  {id:"steps",lb:"Average daily steps",ty:"number",unit:"steps",hint:"Check your phone or watch for the last 7-day average."}
+ ]},
+ {t:"Your goal",l:"What shredded means to you, and by when.",f:[
+  {id:"goal",lb:"Main goal",ty:"radio",req:1,o:["Get shredded / lose fat, keep muscle","Lose fat steadily","Recomp (lose fat, gain muscle)","Lean out for an event or photo shoot","Competition prep"]},
+  {id:"deadline",lb:"Target date or event",ty:"text",hint:"Wedding, vacation, show date, or 'no deadline'."},
+  {id:"why",lb:"Why now? What will hitting this goal change for you?",ty:"textarea"},
+  {id:"history",lb:"Past diets: what worked, what didn't, and why you stopped",ty:"textarea",req:1},
+  {id:"lowHigh",lb:"Lowest and highest weight as an adult (and when)",ty:"text"}
+ ]},
+ {t:"Training",l:"So we can fuel sessions and put the right meals around them.",f:[
+  {id:"trainDays",lb:"Lifting days per week",ty:"radio",req:1,o:["0","1","2","3","4","5","6","7"]},
+  {id:"split",lb:"Current program or split",ty:"text",hint:"e.g. push/pull/legs, upper/lower, CrossFit, own program."},
+  {id:"trainTime",lb:"Usual training time",ty:"time",req:1,half:1},
+  {id:"trainLen",lb:"Session length",ty:"number",half:1,unit:"min"},
+  {id:"trainVaries",lb:"Does your training time change day to day? Explain.",ty:"textarea",hint:"e.g. 5:30 am on weekdays, noon on weekends; at the station on shift days."},
+  {id:"cardio",lb:"Cardio: type, days per week and minutes",ty:"text",hint:"e.g. incline walk 3×30, none."},
+  {id:"exp",lb:"Lifting experience",ty:"radio",req:1,o:["Under 1 year","1–3 years","3–5 years","5+ years"]},
+  {id:"fasted",lb:"Do you train better fasted or fed?",ty:"radio",o:["Fasted","Need food first","Don't know"]},
+  {id:"dayType",lb:"Training days vs rest days",ty:"radio",req:1,hint:"More food on training days fuels sessions; same every day is simpler to follow.",o:["Same calories every day","More food on training days, less on rest days","Not sure, coach decides"]}
+ ]},
+ {t:"Your day",l:"Wake to bed. This is the window every meal has to fit in.",f:[
+  {id:"wake",lb:"Wake time",ty:"time",req:1,half:1},
+  {id:"bed",lb:"Bedtime",ty:"time",req:1,half:1},
+  {id:"weekend",lb:"Are weekends or days off different? How?",ty:"textarea"},
+  {id:"sleepHrs",lb:"Hours of actual sleep per night",ty:"number",half:1,unit:"hrs"},
+  {id:"sleepQ",lb:"Sleep quality",ty:"range",half:1,min:1,max:10,lo:"Poor",hi:"Great"},
+  {id:"stress",lb:"Stress level lately",ty:"range",min:1,max:10,lo:"Calm",hi:"Maxed out"}
+ ]},
+ {t:"Meals and timing",l:"How you like to eat, so the plan fits you and not the other way around.",f:[
+  {id:"meals",lb:"Meals per day you'd prefer",ty:"radio",req:1,o:["2","3","4","5","6"]},
+  {id:"snacks",lb:"Do you want snacks on top of meals?",ty:"radio",req:1,o:["Yes","No","Only around training"]},
+  {id:"firstMeal",lb:"Earliest you'd want your first meal",ty:"time",half:1},
+  {id:"lastMeal",lb:"Latest you'd want your last meal",ty:"time",half:1},
+  {id:"breakfast",lb:"Are you hungry in the morning?",ty:"radio",o:["Yes, I want breakfast","Not really","Coffee only until later"]},
+  {id:"bigMeal",lb:"When do you want your biggest meal?",ty:"radio",req:1,o:["Morning","Midday","Evening","Spread evenly","Around training"]},
+  {id:"hungry",lb:"When are you hungriest or most likely to snack?",ty:"chips",o:["Morning","Afternoon","After dinner","Late night","After training","Weekends"]},
+  {id:"preWO",lb:"Do you want a meal before training?",ty:"radio",o:["Yes, full meal","Small snack","Nothing"]},
+  {id:"eatOut",lb:"Meals eaten out or delivered per week",ty:"number",half:1},
+  {id:"cook",lb:"Cooking",ty:"radio",half:1,o:["I cook most meals","Some","Barely","Someone cooks for me"]},
+  {id:"prep",lb:"Willing to meal prep?",ty:"radio",o:["Yes, batch cook weekly","A couple times a week","Prefer quick daily meals","No"]},
+  {id:"workMeals",lb:"Can you eat at work? Fridge or microwave access?",ty:"text"},
+  {id:"family",lb:"Do you eat with family or a partner? Do they eat the same food?",ty:"text"}
+ ]},
+ {t:"Foods you like",l:"Pick everything you'd happily eat on repeat. We build the plan from these.",f:[
+  {id:"proteins",lb:"Proteins",ty:"chips",req:1,o:PROTEINS,other:1},
+  {id:"carbs",lb:"Carbs",ty:"chips",req:1,o:CARBS,other:1},
+  {id:"fats",lb:"Fats",ty:"chips",req:1,o:FATS,other:1},
+  {id:"veg",lb:"Vegetables",ty:"chips",o:VEG,other:1},
+  {id:"fruit",lb:"Fruit",ty:"chips",o:FRUIT,other:1},
+  {id:"cuisine",lb:"Cuisines you love",ty:"chips",o:CUISINE,other:1},
+  {id:"comfort",lb:"Comfort foods you'd love to keep eating",ty:"chips",req:1,hint:"Pick everything you'd miss. We'll build lean, macro-friendly versions so these stay in the plan.",o:COMFORT,other:1},
+  {id:"favMeals",lb:"Your 3–5 favorite meals",ty:"textarea",req:1,hint:"Real meals you crave: burrito bowls, burgers, pancakes. We'll build macro-friendly versions."},
+  {id:"sweets",lb:"Snacks and sweets you'd want to keep in",ty:"chips",hint:"We'll fit these in or find higher-protein swaps.",o:SWEETS,other:1},
+  {id:"treats",lb:"Any specific brands or go-to orders?",ty:"text",hint:"e.g. Halo Top, In-N-Out double-double, Subway turkey footlong, a beer on Fridays."},
+  {id:"dislikes",lb:"Foods you won't eat",ty:"textarea"},
+  {id:"allergy",lb:"Allergies or intolerances",ty:"text",hint:"Write 'none' if none."},
+  {id:"pattern",lb:"Eating style",ty:"chips",o:["No restrictions","Vegetarian","Vegan","Pescatarian","Dairy-free","Gluten-free","Halal","Kosher","Low FODMAP"]},
+  {id:"budget",lb:"Weekly grocery budget for yourself",ty:"number",unit:"$"}
+ ]},
+ {t:"Current eating",l:"Where you're starting from. No judgment, just the real numbers.",f:[
+  {id:"typicalDay",lb:"Walk us through a typical day of eating, with times",ty:"textarea",req:1,hint:"7 am: 2 eggs, toast, coffee with creamer. Noon: Chipotle bowl…"},
+  {id:"tracked",lb:"Have you tracked calories or macros before?",ty:"radio",req:1,o:["Yes, currently","In the past","Never"]},
+  {id:"currentCals",lb:"If you track: average daily calories and protein",ty:"text",hint:"e.g. 2,400 kcal, 160 g protein."},
+  {id:"app",lb:"Tracking app you use or prefer",ty:"text"},
+  {id:"scale",lb:"Do you own a food scale?",ty:"radio",half:1,o:["Yes","No"]},
+  {id:"bodyScale",lb:"Do you weigh yourself daily?",ty:"radio",half:1,o:["Yes","Sometimes","No"]},
+  {id:"alcohol",lb:"Alcoholic drinks per week",ty:"number",half:1},
+  {id:"caffeine",lb:"Caffeine per day (cups, energy drinks, pre-workout)",ty:"text",half:1},
+  {id:"water",lb:"Water per day",ty:"text",hint:"Ounces or bottles."},
+  {id:"supps",lb:"Supplements you take now",ty:"chips",req:1,hint:"Pick 'None' if you don't take any.",o:SUPPS,other:1},
+  {id:"suppDetail",lb:"Supplement brands, doses and timing",ty:"textarea",hint:"e.g. creatine 5 g with breakfast, whey 1 scoop post-workout, pre-workout 1 scoop at 5 am."},
+  {id:"suppOpen",lb:"Open to adding supplements if we recommend them?",ty:"radio",o:["Yes","Only the basics","No, food only"]}
+ ]},
+ {t:"Health",l:"So nothing in the plan works against your body.",f:[
+  {id:"medical",lb:"Medical conditions",ty:"textarea",hint:"Thyroid, diabetes, blood pressure, GI issues, etc. Write 'none' if none."},
+  {id:"meds",lb:"Medications",ty:"textarea"},
+  {id:"injuries",lb:"Injuries or movement limits",ty:"textarea"},
+  {id:"digestion",lb:"Digestion: bloating, heartburn, irregularity?",ty:"text"}
+ ]},
+ {t:"Sticking with it",l:"The best plan is the one you follow on your worst day.",f:[
+  {id:"hardest",lb:"Hardest part of dieting for you",ty:"chips",o:["Hunger","Cravings","Weekends","Eating out","Social events","Night snacking","Boredom with food","Time to cook","Travel","Shift work"]},
+  {id:"style",lb:"How do you want the plan written?",ty:"radio",req:1,o:["Exact meals and portions","Macro targets I fill myself","Meal plan with swap options"]},
+  {id:"commit",lb:"How committed are you for the next 12 weeks?",ty:"range",min:1,max:10,lo:"Testing it out",hi:"All in"},
+  {id:"notes",lb:"Anything else we should know?",ty:"textarea"},
+  {id:"consent",lb:"I understand this is coaching, not medical advice, and I'll check with my doctor if I have a health condition.",ty:"consent",req:1}
+ ]}
+];
+
+const KEY="coaching-intake-draft-v1";
+const form=document.getElementById("form");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function fieldHTML(f){
+  const r=f.req?' <span class="req" aria-hidden="true">*</span>':"";
+  const hint=f.hint?`<p class="hint">${esc(f.hint)}</p>`:"";
+  const cls=`f${f.half?" half":""}`;
+  const err=`<div class="errmsg">${f.ty==="chips"?"Pick at least one.":"Required."}</div>`;
+  const unit=f.unit?`<span class="unit">${esc(f.unit)}</span>`:"";
+  switch(f.ty){
+   case "radio": case "chips":{
+    const type=f.ty==="radio"?"radio":"checkbox";
+    const chips=f.o.map(o=>`<label class="chip"><input type="${type}" name="${f.id}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("");
+    const other=f.other?`<input class="other" type="text" name="${f.id}_other" placeholder="Others, separated by commas" aria-label="Other ${esc(f.lb)}">`:"";
+    return `<div class="${cls}" data-f="${f.id}" role="group" aria-labelledby="q_${f.id}"><span class="q" id="q_${f.id}">${esc(f.lb)}${r}</span>${hint}<div class="chips">${chips}</div>${other}${err}</div>`;}
+   case "height":
+    return `<div class="${cls}" data-f="${f.id}"><span class="q">${esc(f.lb)}${r}</span><div class="pair"><div><input type="number" name="heightFt" inputmode="numeric" min="3" max="8" aria-label="Feet"><span class="unit">ft</span></div><div><input type="number" name="heightIn" inputmode="decimal" min="0" max="11.5" step="0.5" aria-label="Inches"><span class="unit">in</span></div></div>${err}</div>`;
+   case "range":
+    return `<div class="${cls}" data-f="${f.id}"><label for="i_${f.id}">${esc(f.lb)}</label><div class="range"><span class="hint" style="margin:0">${esc(f.lo)}</span><input type="range" id="i_${f.id}" name="${f.id}" min="${f.min}" max="${f.max}" value="5"><span class="hint" style="margin:0">${esc(f.hi)}</span><output id="o_${f.id}">5</output></div></div>`;
+   case "textarea":
+    return `<div class="${cls}" data-f="${f.id}"><label for="i_${f.id}">${esc(f.lb)}${r}</label>${hint}<textarea id="i_${f.id}" name="${f.id}"></textarea>${err}</div>`;
+   case "consent":
+    return `<div class="${cls}" data-f="${f.id}"><label class="consent"><input type="checkbox" name="${f.id}" value="Yes"><span>${esc(f.lb)}${r}</span></label>${err}</div>`;
+   default:{
+    const im=f.ty==="number"?' inputmode="decimal" min="0"':"";
+    const ac={name:"name",email:"email",phone:"tel"}[f.id]||"off";
+    return `<div class="${cls}" data-f="${f.id}"><label for="i_${f.id}">${esc(f.lb)}${r}</label>${hint}<div style="position:relative"><input type="${f.ty}" id="i_${f.id}" name="${f.id}"${im} autocomplete="${ac}" style="${f.unit?"padding-right:56px":""}">${unit}</div>${err}</div>`;}
+  }
+}
+
+form.innerHTML=SECTIONS.map((s,i)=>`<section class="step" id="s${i+1}"><h2><span class="n">${i+1}/${SECTIONS.length}</span>${esc(s.t)}</h2><p class="lede">${esc(s.l)}</p><div class="grid">${s.f.map(fieldHTML).join("")}</div></section>`).join("")+
+ `<div class="actions"><button type="submit" class="primary">Review and send</button><button type="button" class="ghost" id="clearBtn">Start over</button></div>`;
+
+const ALL=SECTIONS.flatMap(s=>s.f);
+function val(f){
+  const el=form.elements;
+  if(f.ty==="chips"){
+    const v=[...form.querySelectorAll(`input[name="${f.id}"]:checked`)].map(x=>x.value);
+    const o=el[f.id+"_other"]?.value.trim(); if(o) v.push(o); return v.join(", ");
+  }
+  if(f.ty==="radio"){const c=form.querySelector(`input[name="${f.id}"]:checked`);return c?c.value:"";}
+  if(f.ty==="consent") return form.querySelector(`input[name="${f.id}"]`).checked?"Yes":"";
+  if(f.ty==="height"){const ft=el.heightFt.value,inch=el.heightIn.value;return ft?`${ft} ft ${inch||0} in`:"";}
+  return (el[f.id]?.value||"").trim();
+}
+
+function collect(){
+  const d={};
+  [...form.elements].forEach(e=>{
+    if(!e.name) return;
+    if(e.type==="checkbox"||e.type==="radio"){ if(e.checked)(d[e.name]=d[e.name]||[]).push(e.value); }
+    else d[e.name]=e.value;
+  });
+  return d;
+}
+function restore(d){
+  [...form.elements].forEach(e=>{
+    if(!e.name||!(e.name in d)) return;
+    if(e.type==="checkbox"||e.type==="radio") e.checked=d[e.name].includes(e.value);
+    else e.value=d[e.name];
+  });
+  form.querySelectorAll('input[type=range]').forEach(r=>document.getElementById("o_"+r.name).textContent=r.value);
+}
+
+let saveT;
+function save(){
+  clearTimeout(saveT);
+  saveT=setTimeout(()=>{
+    try{localStorage.setItem(KEY,JSON.stringify(collect()));document.getElementById("savedTxt").textContent="Saved on this device";}catch(e){}
+  },400);
+}
+function progress(){
+  const req=ALL.filter(f=>f.req), done=req.filter(f=>val(f)).length;
+  document.getElementById("fill").style.width=(done/req.length*100)+"%";
+  document.getElementById("progTxt").textContent=`${done} of ${req.length} required answered`;
+}
+
+form.addEventListener("input",e=>{
+  if(e.target.type==="range") document.getElementById("o_"+e.target.name).textContent=e.target.value;
+  const box=e.target.closest(".f"); if(box&&box.classList.contains("err")){const f=ALL.find(x=>x.id===box.dataset.f); if(f&&val(f)) box.classList.remove("err");}
+  progress(); save();
+});
+
+const fmtTime=t=>{if(!t) return t;const[h,m]=t.split(":").map(Number);return `${(h%12)||12}:${String(m).padStart(2,"0")} ${h<12?"am":"pm"}`;};
+function summary(){
+  const lines=["COACHING INTAKE",`Submitted ${new Date().toLocaleString()}`,""];
+  SECTIONS.forEach((s,i)=>{
+    lines.push(`== ${i+1}. ${s.t.toUpperCase()} ==`);
+    s.f.forEach(f=>{
+      if(f.ty==="consent") return;
+      let v=val(f); if(!v) return;
+      if(f.ty==="time") v=fmtTime(v);
+      if(f.ty==="range") v=`${v}/10`;
+      if(f.unit&&f.ty==="number") v=f.unit==="$"?`$${v}`:`${v} ${f.unit}`;
+      lines.push(`${f.lb}: ${v}`);
+    });
+    lines.push("");
+  });
+  lines.push(`Not-medical-advice acknowledged: ${val(ALL.find(f=>f.id==="consent"))||"No"}`);
+  return lines.join("\n");
+}
+
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  let first=null;
+  ALL.forEach(f=>{
+    const box=form.querySelector(`[data-f="${f.id}"]`);
+    const bad=f.req&&!val(f); box.classList.toggle("err",bad); if(bad&&!first) first=box;
+  });
+  if(first){first.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});const i=first.querySelector("input,textarea,select");i&&i.focus({preventScroll:true});return;}
+  document.getElementById("summary").textContent=summary();
+  form.style.display="none";
+  const r=document.getElementById("review"); r.style.display="block"; r.scrollIntoView();
+  document.getElementById("status").textContent="";
+});
+
+document.getElementById("editBtn").onclick=()=>{form.style.display="";document.getElementById("review").style.display="none";};
+document.getElementById("clearBtn").onclick=()=>{
+  if(!confirm("Clear every answer and start over?")) return;
+  form.reset(); try{localStorage.removeItem(KEY);}catch(e){}
+  form.querySelectorAll(".err").forEach(b=>b.classList.remove("err"));
+  form.querySelectorAll('input[type=range]').forEach(r=>document.getElementById("o_"+r.name).textContent=r.value);
+  document.getElementById("savedTxt").textContent=""; progress(); window.scrollTo(0,0);
+};
+document.getElementById("copyBtn").onclick=async()=>{
+  const st=document.getElementById("status"), text=document.getElementById("summary").textContent;
+  try{await navigator.clipboard.writeText(text);st.textContent="Copied. Paste it into a text or email to your coach.";}
+  catch(e){
+    const range=document.createRange();range.selectNodeContents(document.getElementById("summary"));
+    const sel=getSelection();sel.removeAllRanges();sel.addRange(range);
+    st.textContent="Your answers are selected. Use your device's Copy, then paste them to your coach.";
+  }
+};
+
+let downloads=null;
+(async()=>{
+  try{ if(window.claude&&claude.use){ downloads=await claude.use("downloads"); if(downloads) document.getElementById("dlBtn").hidden=false; } }catch(e){}
+})();
+document.getElementById("dlBtn").onclick=async()=>{
+  const st=document.getElementById("status");
+  const name=(val(ALL[0])||"client").replace(/[^a-z0-9]+/gi,"-").toLowerCase();
+  try{ await downloads.save({filename:`intake-${name}.txt`,data:new Blob([document.getElementById("summary").textContent],{type:"text/plain"})}); st.textContent="Saved."; }
+  catch(e){ st.textContent="The copy wasn't saved. Use Copy answers instead."; }
+};
+
+try{const d=JSON.parse(localStorage.getItem(KEY)||"null"); if(d){restore(d);document.getElementById("savedTxt").textContent="Draft restored";}}catch(e){}
+progress();
+</script>
+</body>
+</html>
