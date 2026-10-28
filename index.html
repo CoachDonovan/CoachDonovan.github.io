@@ -85,11 +85,11 @@ button{font:600 16px Archivo,sans-serif;border-radius:4px;padding:13px 20px;curs
 <div class="wrap">
   <header class="hero">
     <h1>Let's build your plan.</h1>
-    <p>Everything here shapes your calories, macros and meal schedule. Be honest and specific: the more we know about what you actually eat and when you actually live, the easier the plan is to stick to. Takes about 10 minutes. Your answers save on this device as you go.</p>
+    <p>Everything here shapes your calories, macros and meal schedule. Be honest and specific: the more we know about what you actually eat and when you actually live, the easier the plan is to stick to. Every question is optional, so skip anything you don't want to answer. Takes about 10 minutes. Your answers save on this device as you go.</p>
   </header>
   <div class="progress" aria-hidden="true">
     <div class="bar"><div class="fill" id="fill"></div></div>
-    <div class="meta"><span id="progTxt">0 of 0 required answered</span><span id="savedTxt"></span></div>
+    <div class="meta"><span id="progTxt">0 of 0 questions answered</span><span id="savedTxt"></span></div>
   </div>
   <form id="form" novalidate></form>
   <section class="step" id="review" aria-live="polite">
@@ -224,7 +224,7 @@ const form=document.getElementById("form");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function fieldHTML(f){
-  const r=f.req?' <span class="req" aria-hidden="true">*</span>':"";
+  const r="";
   const hint=f.hint?`<p class="hint">${esc(f.hint)}</p>`:"";
   const cls=`f${f.half?" half":""}`;
   const err=`<div class="errmsg">${f.ty==="chips"?"Pick at least one.":"Required."}</div>`;
@@ -292,9 +292,9 @@ function save(){
   },400);
 }
 function progress(){
-  const req=ALL.filter(f=>f.req), done=req.filter(f=>val(f)).length;
+  const req=ALL.filter(f=>f.ty!=="range"), done=req.filter(f=>val(f)).length;
   document.getElementById("fill").style.width=(done/req.length*100)+"%";
-  document.getElementById("progTxt").textContent=`${done} of ${req.length} required answered`;
+  document.getElementById("progTxt").textContent=`${done} of ${req.length} questions answered`;
 }
 
 form.addEventListener("input",e=>{
@@ -327,7 +327,7 @@ form.addEventListener("submit",e=>{
   let first=null;
   ALL.forEach(f=>{
     const box=form.querySelector(`[data-f="${f.id}"]`);
-    const bad=f.req&&!val(f); box.classList.toggle("err",bad); if(bad&&!first) first=box;
+    const bad=false; box.classList.toggle("err",bad); if(bad&&!first) first=box;
   });
   if(first){first.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});const i=first.querySelector("input,textarea,select");i&&i.focus({preventScroll:true});return;}
   document.getElementById("summary").textContent=summary();
